@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using BowlingLeague.Models;
+using BowlingLeague.Models.ViewModels;
 
 namespace BowlingLeague.Controllers
 {
@@ -20,9 +21,29 @@ namespace BowlingLeague.Controllers
             context = ctx;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(long? teamid, string teamname, int pageNum = 0)
         {
-            return View(context.Bowlers.ToList());
+            int pageSize = 5;
+
+            return View(new IndexViewModel
+            {
+                Bowlers = context.Bowlers
+                    .Where(b => b.TeamId == teamid || teamid == null)
+                    .OrderBy(b => b.Team)
+                    .Skip((pageNum - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToList(),
+
+                PageNumberInfo = new PageNumberInfo
+                {
+                    NumItemsPerPage = pageSize,
+                    CurrentPage = pageNum,
+                    TotalNumItems = (teamid == null ? context.Bowlers.Count() :
+                        context.Bowlers.Where(x => x.TeamId == teamid).Count())
+                },
+                TeamName = teamname
+            });
+                
         }
 
         public IActionResult Privacy()

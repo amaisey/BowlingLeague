@@ -2,11 +2,31 @@
     ViewData["Title"] = "Home Page";
 }
 
-@model IEnumerable<Bowlers>
+@model IndexViewModel
+
 
 <div class="text-center">
-    @foreach (var x in Model)
+    <h1 class="display-4">@Model.TeamName</h1>
+    @foreach (var x in Model.Bowlers)
     {
-        <p>@x.BowlerFirstName</p>
+        <div class="card-left bg-info mb-3" style="width: 40rem;">
+            <div class="card-header">
+                <h5 class="card-text text-center">@x.BowlerFirstName @x.BowlerMiddleInit @x.BowlerLastName</h5>
+            </div>
+            <div class="row">
+                <div class="card-body text-left">
+                    <p>@x.BowlerAddress</p>
+                    <p>@x.BowlerCity, @x.BowlerState @x.BowlerZip</p>
+                </div>
+                <div class="card-body text-left">
+                    <p>Phone:</p>
+                    <p>@x.BowlerPhoneNumber</p>
+                </div>
+            </div>
+            
+        </div>
     }
+</div>
+<div class="text-center" page-info="@Model.PageNumberInfo" page-url-teamname="@Model.TeamName">
+
 </div>
